@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "TmcDriver": {
-      "commandName": "Project",
-      "nativeDebugging": true
-    }
-  }
-}
