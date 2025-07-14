@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TmcTest": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}
