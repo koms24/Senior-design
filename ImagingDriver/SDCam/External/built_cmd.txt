@@ -1,0 +1,31 @@
+#TEST BUILD
+gcc -I/usr/include/rpicam-apps -I/usr/include/libcamera -I/usr/local/include/opencv4 -I/usr/include \
+    -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c++17 -O3 -pedantic -Wno-unused-parameter \
+    -faligned-new -D_FILE_OFFSET_BITS=64 -Wno-psabi -ftree-vectorize \
+    test.cpp \
+    -o test \
+    -Wl,--as-needed -Wl,--no-undefined -Wl,-O1 \
+    -l:rpicam_app.so -lcamera -lboost_program_options -lopencv_core -lopencv_imgproc \
+    -lopencv_imgcodecs -lopencv_highgui -l:libstdc++.so
+
+#BUILD SHARED LIB
+gcc -I/usr/include/rpicam-apps -I/usr/include/libcamera -I/usr/local/include/opencv4 -I/usr/include \
+    -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c++17 -O3 -pedantic -Wno-unused-parameter \
+    -faligned-new -D_FILE_OFFSET_BITS=64 -Wno-psabi -ftree-vectorize \
+    -fPIC \
+    sd_cam_controller.cpp \
+    -shared \
+    -o libsd_cam_controller.so \
+    -Wl,--as-needed -Wl,--no-undefined -Wl,-O1 \
+    -l:rpicam_app.so -lcamera -lboost_program_options -lopencv_core -lopencv_imgproc \
+    -lopencv_imgcodecs -lopencv_highgui -l:libstdc++.so
+
+#BUILD AND SHARED LOCAL
+gcc -I/usr/include/rpicam-apps -I/usr/include/libcamera -I/usr/local/include/opencv4 -I/usr/include \
+    -L./ -Wall -Winvalid-pch -Wextra -Wpedantic -Werror -std=c++17 -O3 -pedantic -Wno-unused-parameter \
+    -faligned-new -D_FILE_OFFSET_BITS=64 -Wno-psabi -ftree-vectorize \
+    test2.cpp \
+    -o test2 \
+    -Wl,--as-needed -Wl,--no-undefined -Wl,-O1 \
+    -l:rpicam_app.so -lcamera -lboost_program_options -lopencv_core -lopencv_imgproc \
+    -lopencv_imgcodecs -lopencv_highgui -l:libstdc++.so -lsd_cam_controller
