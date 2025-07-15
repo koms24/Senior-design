@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MachineVision": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

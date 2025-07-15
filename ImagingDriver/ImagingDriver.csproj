@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>$(SolutionName).$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <ProjectReference Include="..\SeniorDesignFall2024.Server.Shared\SeniorDesignFall2024.Server.Shared.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="$(RuntimeIdentifier.StartsWith('win'))">
+    
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ApiControllers\" />
+    <Folder Include="SDCam\External\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="OpenCvSharp4" Version="4.10.0.20240616" />
+  </ItemGroup>
+
+  <ItemGroup Condition="$([MSBuild]::IsOSPlatform('Linux'))">
+    <None Include="SDCam/External/libsd_cam_native.so">
+      <Link>%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

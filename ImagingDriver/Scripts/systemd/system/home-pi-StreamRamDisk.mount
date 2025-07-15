@@ -1,0 +1,17 @@
+[Unit]
+Description=StreamRamDisk
+ConditionPathIsSymbolicLink=!/home/pi/StreamRamDisk
+DefaultDependencies=no
+Conflicts=unmount.target
+Before=local-fs.target unmount.target
+After=swap.target
+
+[Mount]
+What=tmpfs
+Where=/home/pi/StreamRamDisk
+Type=tmpfs
+Options=mode=1777,strictatime,nosuid,nodev,size=128m
+
+[Install]
+WantedBy=local-fs.target
+
