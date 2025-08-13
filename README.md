@@ -21,6 +21,20 @@ This system combines multiple technologies to create an intelligent plant monito
 - **Stepper motors** (if using motor control features)
 - **GPIO sensors** (soil moisture, temperature, etc.)
 
+### ⚠️ Hardware Disclaimer
+**This system requires actual hardware components to function properly. Software-only testing will have limited functionality:**
+
+- **Camera Features**: Will not work without a physical camera device
+- **GPIO Operations**: Will fail without Raspberry Pi or compatible GPIO hardware
+- **Motor Control**: TMC2209 drivers require actual stepper motors and hardware
+- **Sensor Data**: No real-time data without connected sensors
+- **Streaming**: Video streaming requires camera hardware and sufficient processing power
+
+**For development/testing without hardware:**
+- Use the test projects to verify individual components
+- Mock hardware interfaces for development
+- Consider using emulators or virtual environments for basic testing
+
 ### Software Dependencies
 - **.NET SDK 8.0** - Core runtime and development framework
 - **OpenHAB** - Home automation platform (optional)
@@ -30,6 +44,20 @@ This system combines multiple technologies to create an intelligent plant monito
 - **Node.js & npm** - For Angular client development
 
 ## 📋 Prerequisites
+
+### 0. Hardware Components
+**Before proceeding with software setup, ensure you have the required hardware:**
+
+- **Raspberry Pi 5** (or compatible single-board computer)
+- **Camera Module** (Raspberry Pi Camera v3 or USB webcam)
+- **Power Supply** (5V/3A minimum for Pi 5)
+- **MicroSD Card** (32GB+ Class 10 recommended)
+- **Stepper Motors** (if using motor control features)
+- **GPIO Sensors** (soil moisture, temperature, humidity)
+- **Motor Drivers** (TMC2209 or compatible)
+- **Breadboard & Jumper Wires** for prototyping
+
+**Note**: This system is designed for physical deployment. Software-only testing will have severely limited functionality.
 
 ### 1. .NET SDK 8.0
 ```bash
@@ -105,7 +133,35 @@ cd seniordesignfall2024.client
 npm install
 ```
 
-### 5. Configure Database
+### 5. Choose Your Development Environment
+
+#### Option A: Visual Studio (Windows)
+- **Recommended for**: Windows users, full IDE experience
+- **Requirements**: Visual Studio 2022 Community/Professional/Enterprise
+- **Setup**: 
+  - Install Visual Studio 2022 with ".NET desktop development" workload
+  - Open `SeniorDesignFall2024.sln` in Visual Studio
+  - Build solution with `Ctrl+Shift+B`
+  - Run with `F5` (debug) or `Ctrl+F5` (without debug)
+
+#### Option B: VS Code (Cross-platform)
+- **Recommended for**: Linux, macOS, or lightweight Windows development
+- **Requirements**: VS Code with C# extension
+- **Setup**:
+  ```bash
+  # Install VS Code extensions
+  code --install-extension ms-dotnettools.csharp
+  code --install-extension ms-dotnettools.vscode-dotnet-runtime
+  
+  # Open project in VS Code
+  code .
+  ```
+- **Usage**: 
+  - Use `Ctrl+Shift+P` → "Run Task" → "build" to build
+  - Use integrated terminal: `dotnet run` in project directories
+  - Debug with F5 (requires launch.json configuration)
+
+### 6. Configure Database
 ```bash
 # Navigate to Database project
 cd ../Database
@@ -119,16 +175,30 @@ dotnet ef database update
 
 ## 🚀 Running the Application
 
-### 1. Start the Server
+### Option 1: Command Line (Recommended for VS Code/Linux)
+#### 1. Start the Server
 ```bash
 # From the root directory
 cd SeniorDesignFall2024.Server
 dotnet run
 ```
 
-### 2. Start the Client (in a new terminal)
+#### 2. Start the Client (in a new terminal)
 ```bash
 # From the client directory
+cd seniordesignfall2024.client
+npm start
+```
+
+### Option 2: Visual Studio (Windows)
+#### 1. Start the Server
+- Open `SeniorDesignFall2024.sln` in Visual Studio
+- Set `SeniorDesignFall2024.Server` as startup project (right-click → "Set as Startup Project")
+- Press `F5` to run with debugger or `Ctrl+F5` to run without debugger
+
+#### 2. Start the Client
+- In a new terminal or command prompt:
+```bash
 cd seniordesignfall2024.client
 npm start
 ```
@@ -137,6 +207,21 @@ npm start
 - **Server API**: https://localhost:7000
 - **Client App**: https://localhost:4200
 - **API Documentation**: https://localhost:7000/swagger
+
+### ⚠️ Limited Functionality Without Hardware
+**When running without physical hardware, expect these limitations:**
+- Camera streaming endpoints will return errors
+- GPIO operations will fail
+- Motor control commands will not execute
+- Sensor data will be static or missing
+- Some API endpoints may return hardware-related errors
+
+**What WILL work without hardware:**
+- Web interface and navigation
+- Database operations (if configured)
+- Basic API structure and routing
+- Configuration management
+- Business logic components
 
 ## ⚙️ Configuration
 
@@ -183,6 +268,15 @@ dotnet test DatabaseTest/
 dotnet test TmcTest/
 ```
 
+### Hardware Simulation & Testing
+Since this system requires physical hardware, consider these testing approaches:
+
+- **Unit Tests**: Test individual components and business logic
+- **Integration Tests**: Test component interactions (when hardware is available)
+- **Mock Hardware**: Use the test projects to simulate hardware responses
+- **Hardware Emulation**: Some components can be tested with virtual devices
+- **Partial Testing**: Test database, web interface, and business logic without hardware
+
 ### Test Individual Components
 ```bash
 # Test Machine Vision
@@ -197,6 +291,31 @@ dotnet run
 cd TmcTest
 dotnet run
 ```
+
+## 🐛 Debugging & Development
+
+### Visual Studio Debugging
+- **Breakpoints**: Click in the left margin or press `F9`
+- **Step Through**: `F10` (step over), `F11` (step into), `Shift+F11` (step out)
+- **Watch Window**: Add variables to watch during debugging
+- **Immediate Window**: Execute code while paused at breakpoints
+
+### VS Code Debugging
+- **Breakpoints**: Click in the left margin or press `F9`
+- **Debug Console**: Execute code while paused at breakpoints
+- **Variables Panel**: Inspect local and global variables
+- **Call Stack**: Navigate through function calls
+
+### Development Workflow Differences
+
+| Feature | Visual Studio | VS Code |
+|---------|---------------|---------|
+| **IntelliSense** | Full-featured, real-time | Good with C# extension |
+| **Debugging** | Advanced debugging tools | Basic debugging support |
+| **Build System** | Integrated MSBuild | Command line (`dotnet build`) |
+| **Package Management** | NuGet Package Manager | Command line (`dotnet add package`) |
+| **Solution Explorer** | Built-in tree view | File explorer with project structure |
+| **Performance** | Heavier, more features | Lightweight, faster startup |
 
 ## 📁 Project Structure
 
@@ -213,6 +332,22 @@ Senior-design/
 ```
 
 ## 🔍 Troubleshooting
+
+### Platform-Specific Considerations
+
+#### Windows Development
+- **Visual Studio**: Use the full IDE for best experience
+- **VS Code**: Install C# extension and .NET runtime extension
+- **Dependencies**: Most packages are automatically managed by NuGet
+
+#### Linux/Raspberry Pi Development
+- **VS Code**: Recommended for lightweight development
+- **Command Line**: Use `dotnet` CLI for all operations
+- **Dependencies**: Manual installation required for native libraries
+
+#### macOS Development
+- **VS Code**: Primary development environment
+- **Command Line**: Use `dotnet` CLI and Homebrew for dependencies
 
 ### Common Issues
 
